@@ -52,3 +52,23 @@ button:disabled{opacity:.55;cursor:not-allowed;}
 .primary-btn:hover{background:#20edf9;transform:translateY(-1px);}
 .ghost-btn{padding:12px 20px;border-radius:9px;border:1px solid var(--border);color:var(--white);font-weight:650;}
 .ghost-btn:hover{border-color:rgba(0,229,245,.4);color:var(--cyan);}
+    .news-ticker{position:fixed;top:72px;left:0;right:0;height:34px;z-index:900;display:flex;align-items:center;background:rgba(8,12,24,.9);border-bottom:1px solid rgba(255,255,255,.07);overflow:hidden;}
+.news-ticker.hidden{display:none;}
+.news-label{flex-shrink:0;padding:0 14px;height:100%;display:flex;align-items:center;gap:7px;border-right:1px solid rgba(255,255,255,.08);color:var(--cyan);font-size:.66rem;font-weight:750;letter-spacing:.7px;text-transform:uppercase;}
+.news-label i{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);animation:pulse 1.6s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.news-track{flex:1;overflow:hidden;}
+.news-track-inner{display:flex;gap:36px;width:max-content;animation:ticker 60s linear infinite;}
+.news-track-inner:hover{animation-play-state:paused;}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.news-item{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:.72rem;text-decoration:none;white-space:nowrap;}
+.news-item:hover{color:var(--white);}
+.news-item .src{color:var(--cyan);font-weight:700;font-size:.66rem;}
+.landing{padding-top:106px;}
+.container{max-width:1080px;margin:0 auto;padding:0 24px;}
+.hero{padding:88px 24px 72px;text-align:center;max-width:920px;margin:0 auto;}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;margin-bottom:22px;border:1px solid rgba(0,229,245,.2);border-radius:999px;color:var(--cyan);background:rgba(0,229,245,.05);font-size:.72rem;font-weight:700;letter-spacing:.4px;}
+.hero h1{font-size:clamp(2.1rem,6.5vw,3.6rem);line-height:1.1;letter-spacing:-1.4px;margin-bottom:18px;font-weight:750;}
+.hero h1 span{color:var(--cyan);}
+.hero-lead{max-width:680px;margin:0 auto 28px;color:var(--muted);font-size:1.02rem;line-height:1.7;}
+.hero-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;}
