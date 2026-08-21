@@ -1,0 +1,1085 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aetheris Capital | Investment Platform</title>
+<meta name="description" content="Aetheris Capital — pure-crypto Hybrid CeDeFi yield. Structured plans with live portfolio tracking.">
+
+<!-- Open Graph / Telegram / WhatsApp / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Aetheris Capital">
+<meta property="og:title" content="Aetheris Capital | Pure-Crypto Yield Plans">
+<meta property="og:description" content="Disciplined capital meets digital markets. Structured CeDeFi plans with live progress tracking.">
+<meta property="og:url" content="https://chic-bavarois-919e28.netlify.app/">
+<meta property="og:image" content="https://chic-bavarois-919e28.netlify.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aetheris Capital — pure-crypto yield plans">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Aetheris Capital | Pure-Crypto Yield Plans">
+<meta name="twitter:description" content="Disciplined capital meets digital markets. Structured CeDeFi plans with live progress tracking.">
+<meta name="twitter:image" content="https://chic-bavarois-919e28.netlify.app/og-image.png">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3"></script>
+<style>
+:root{
+  --bg:#060b16; --bg2:#0b1222; --cyan:#00e5f5; --white:#f7fafc;
+  --muted:#8c9ab0; --border:rgba(255,255,255,.09);
+  --green:#4ade80; --red:#fb7185; --amber:#fbbf24;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;}
+html{scroll-behavior:smooth;}
+body{min-height:100vh;color:var(--white);background:linear-gradient(180deg,var(--bg2),var(--bg));overflow-x:hidden;}
+button,input,select,textarea{font:inherit;}
+button{cursor:pointer;border:0;background:none;color:inherit;}
+button:disabled{opacity:.55;cursor:not-allowed;}
+#globeCanvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.22;}
+.page-wrap{position:relative;z-index:1;}
+.navbar{position:fixed;top:0;left:0;right:0;height:72px;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:rgba(6,11,22,.88);border-bottom:1px solid var(--border);backdrop-filter:blur(16px);}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--white);}
+.brand-mark{color:var(--cyan);font-size:1.35rem;line-height:1;text-shadow:0 0 18px rgba(0,229,245,.35);}
+.brand-text{display:flex;flex-direction:column;line-height:1.05;}
+.brand-name{font-size:.95rem;font-weight:800;letter-spacing:1.6px;}
+.brand-sub{font-size:.62rem;font-weight:650;letter-spacing:2.4px;color:var(--muted);}
+.nav-links{display:flex;align-items:center;gap:18px;}
+.nav-text-btn{padding:8px 2px;font-size:.82rem;font-weight:600;color:var(--muted);}
+.nav-text-btn:hover{color:var(--cyan);}
+.primary-btn{padding:12px 20px;border-radius:9px;background:var(--cyan);color:#041017;font-weight:750;box-shadow:0 8px 28px rgba(0,229,245,.22);transition:.18s;}
+.primary-btn:hover{background:#20edf9;transform:translateY(-1px);}
+.ghost-btn{padding:12px 20px;border-radius:9px;border:1px solid var(--border);color:var(--white);font-weight:650;}
+.ghost-btn:hover{border-color:rgba(0,229,245,.4);color:var(--cyan);}
+.news-ticker{position:fixed;top:72px;left:0;right:0;height:34px;z-index:900;display:flex;align-items:center;background:rgba(8,12,24,.9);border-bottom:1px solid rgba(255,255,255,.07);overflow:hidden;}
+.news-ticker.hidden{display:none;}
+.news-label{flex-shrink:0;padding:0 14px;height:100%;display:flex;align-items:center;gap:7px;border-right:1px solid rgba(255,255,255,.08);color:var(--cyan);font-size:.66rem;font-weight:750;letter-spacing:.7px;text-transform:uppercase;}
+.news-label i{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);animation:pulse 1.6s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.news-track{flex:1;overflow:hidden;}
+.news-track-inner{display:flex;gap:36px;width:max-content;animation:ticker 60s linear infinite;}
+.news-track-inner:hover{animation-play-state:paused;}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.news-item{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:.72rem;text-decoration:none;white-space:nowrap;}
+.news-item:hover{color:var(--white);}
+.news-item .src{color:var(--cyan);font-weight:700;font-size:.66rem;}
+.landing{padding-top:106px;}
+.container{max-width:1080px;margin:0 auto;padding:0 24px;}
+.hero{padding:88px 24px 72px;text-align:center;max-width:920px;margin:0 auto;}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;margin-bottom:22px;border:1px solid rgba(0,229,245,.2);border-radius:999px;color:var(--cyan);background:rgba(0,229,245,.05);font-size:.72rem;font-weight:700;letter-spacing:.4px;}
+.hero h1{font-size:clamp(2.1rem,6.5vw,3.6rem);line-height:1.1;letter-spacing:-1.4px;margin-bottom:18px;font-weight:750;}
+.hero h1 span{color:var(--cyan);}
+.hero-lead{max-width:680px;margin:0 auto 28px;color:var(--muted);font-size:1.02rem;line-height:1.7;}
+.hero-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;}
+.section{padding:70px 0;}
+.section-label{color:var(--cyan);font-size:.72rem;font-weight:750;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;}
+.section-title{font-size:clamp(1.4rem,3.5vw,1.9rem);margin-bottom:14px;letter-spacing:-.4px;}
+.section-text{color:var(--muted);font-size:.92rem;line-height:1.7;max-width:640px;}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:36px;}
+.pillar{padding:26px 22px;border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.02);}
+.pillar-icon{color:var(--cyan);font-size:1.15rem;margin-bottom:14px;}
+.pillar h3{font-size:1rem;margin-bottom:10px;}
+.pillar p{color:var(--muted);font-size:.82rem;line-height:1.65;}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin:10px 0 0;border:1px solid var(--border);border-radius:16px;overflow:hidden;background:var(--border);}
+.stat{background:rgba(11,18,34,.92);padding:28px 18px;text-align:center;}
+.stat strong{display:block;font-size:1.15rem;color:var(--cyan);margin-bottom:6px;font-weight:800;}
+.stat span{color:var(--muted);font-size:.72rem;letter-spacing:.4px;text-transform:uppercase;}
+.about-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;margin-top:28px;}
+.about-card{padding:26px;border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.02);}
+.about-card h3{font-size:1rem;margin-bottom:12px;color:var(--cyan);}
+.about-card p{color:var(--muted);font-size:.84rem;line-height:1.7;margin-bottom:12px;}
+.about-card ul{list-style:none;margin-top:8px;}
+.about-card li{position:relative;padding-left:16px;margin-bottom:10px;color:var(--muted);font-size:.82rem;line-height:1.55;}
+.about-card li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--cyan);}
+.payout-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:28px;}
+.payout-step{padding:18px 14px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.025);text-align:center;}
+.payout-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:rgba(0,229,245,.12);color:var(--cyan);font-size:.75rem;font-weight:800;margin-bottom:10px;}
+.payout-step h3{font-size:.82rem;margin-bottom:6px;}
+.payout-step p{color:var(--muted);font-size:.74rem;line-height:1.5;}
+.strategy-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:28px;}
+.strategy-item{padding:22px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.025);}
+.strategy-item h3{font-size:.95rem;margin-bottom:8px;}
+.strategy-item p{color:var(--muted);font-size:.8rem;line-height:1.6;}
+.strategy-tag{display:inline-block;font-size:.66rem;font-weight:700;color:var(--cyan);background:rgba(0,229,245,.1);padding:3px 8px;border-radius:999px;margin-bottom:10px;}
+.tier-map{margin-top:28px;border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.tier-map table{width:100%;border-collapse:collapse;font-size:.8rem;}
+.tier-map th,.tier-map td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;}
+.tier-map th{color:var(--cyan);font-weight:700;font-size:.72rem;text-transform:uppercase;letter-spacing:.4px;}
+.tier-map td{color:var(--muted);line-height:1.5;}
+.tier-map td strong{color:var(--white);}
+.story{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;}
+.story ul{margin-top:20px;list-style:none;}
+.story li{position:relative;padding-left:18px;margin-bottom:12px;color:var(--muted);font-size:.88rem;line-height:1.55;}
+.story li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--cyan);}
+.story-card{padding:28px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(160deg,rgba(0,229,245,.06),rgba(255,255,255,.02));}
+.quote{font-size:1.05rem;line-height:1.55;margin-bottom:14px;font-weight:500;}
+.quote cite{display:block;margin-top:12px;color:var(--muted);font-size:.78rem;font-style:normal;}
+.mission-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px;}
+.mission-card{padding:26px;border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.02);}
+.mission-card h3{font-size:.95rem;margin-bottom:10px;color:var(--cyan);}
+.mission-card p{color:var(--muted);font-size:.84rem;line-height:1.65;}
+.market-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px;}
+.market-card{padding:20px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.025);}
+.market-card.extra{display:none;}
+.markets-expanded .market-card.extra{display:block;}
+.coin{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.coin-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(0,229,245,.08);color:var(--cyan);font-weight:800;font-size:.85rem;}
+.coin-name{font-weight:700;font-size:.92rem;}
+.coin-symbol{color:var(--muted);font-size:.7rem;}
+.market-price{font-size:1.2rem;font-weight:800;}
+.market-change{margin-top:4px;font-size:.74rem;font-weight:700;}
+.up{color:var(--green);} .down{color:var(--red);}
+.live{display:inline-flex;align-items:center;gap:6px;color:var(--green);font-size:.72rem;font-weight:700;}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);}
+.see-more-wrap{text-align:center;margin-top:18px;}
+.see-more-btn{padding:10px 18px;border-radius:9px;border:1px solid var(--border);color:var(--cyan);font-size:.82rem;font-weight:650;}
+.see-more-btn:hover{border-color:rgba(0,229,245,.45);background:rgba(0,229,245,.05);}
+.cta-band{margin:20px 0 40px;padding:36px 28px;border-radius:18px;text-align:center;border:1px solid rgba(0,229,245,.2);background:linear-gradient(145deg,rgba(0,229,245,.08),rgba(255,255,255,.02));}
+.cta-band h2{font-size:1.4rem;margin-bottom:10px;}
+.cta-band p{color:var(--muted);margin-bottom:20px;font-size:.9rem;}
+.support-line{margin-top:14px;font-size:.82rem;color:var(--muted);}
+.support-line a{color:var(--cyan);text-decoration:none;font-weight:650;}
+footer{text-align:center;padding:28px 20px;color:#64748b;font-size:.7rem;border-top:1px solid var(--border);}
+.disclaimer{max-width:820px;margin:0 auto 10px;color:#5a6a80;font-size:.68rem;line-height:1.55;}
+.footer-support{margin:8px 0 10px;font-size:.78rem;color:var(--muted);}
+.footer-support a{color:var(--cyan);text-decoration:none;font-weight:650;}
+.dashboard{display:none;padding:100px 20px 50px;max-width:1040px;margin:0 auto;}
+.dashboard.show{display:block;}
+.dashboard-header{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:22px;flex-wrap:wrap;}
+.dashboard-header h1{font-size:1.5rem;}
+.dashboard-header p{color:var(--muted);font-size:.82rem;margin-top:4px;}
+.logout-btn{padding:10px 14px;border-radius:8px;border:1px solid var(--border);color:var(--white);}
+.account-card{padding:22px;border-radius:16px;border:1px solid var(--border);margin-bottom:20px;background:linear-gradient(145deg,#111d35,#0a1224);}
+.account-label{color:var(--muted);font-size:.76rem;margin-bottom:6px;}
+.account-email{font-weight:700;}
+.account-status{display:inline-block;margin-top:10px;padding:4px 9px;border-radius:999px;background:rgba(74,222,128,.1);color:var(--green);font-size:.68rem;font-weight:700;}
+.cta-box{padding:22px;border-radius:16px;border:1px solid rgba(0,229,245,.25);background:linear-gradient(145deg,rgba(0,229,245,.08),rgba(0,229,245,.02));margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
+.cta-box h2{font-size:1.1rem;margin-bottom:6px;}
+.cta-box p{color:var(--muted);font-size:.82rem;max-width:520px;line-height:1.55;}
+.plans-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:28px;}
+.plan-card{padding:20px;border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.03);}
+.plan-card.featured{border-color:rgba(0,229,245,.45);background:linear-gradient(160deg,rgba(0,229,245,.08),rgba(255,255,255,.02));}
+.plan-badge{display:inline-block;font-size:.68rem;font-weight:700;color:var(--cyan);background:rgba(0,229,245,.1);padding:4px 8px;border-radius:999px;margin-bottom:10px;}
+.plan-name{font-size:1.05rem;font-weight:750;margin-bottom:6px;}
+.plan-amount{font-size:1.35rem;font-weight:800;color:var(--cyan);margin-bottom:4px;}
+.plan-return{color:var(--green);font-size:.85rem;font-weight:700;margin-bottom:8px;}
+.plan-strategy{color:var(--muted);font-size:.75rem;line-height:1.45;margin-bottom:12px;}
+.plan-details{color:var(--muted);font-size:.78rem;line-height:1.55;margin-bottom:16px;padding-left:16px;}
+.plan-details li{margin-bottom:4px;}
+.plan-btn{width:100%;}
+.wallets-box,.support-box,.referral-box{padding:18px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.025);margin-bottom:28px;}
+.wallets-box h3,.support-box h3,.referral-box h3{font-size:.95rem;margin-bottom:8px;}
+.wallets-box > p,.support-box p,.referral-box > p{color:var(--muted);font-size:.78rem;margin-bottom:12px;line-height:1.55;}
+.wallet-row{display:flex;flex-direction:column;gap:4px;padding:12px 0;border-bottom:1px solid var(--border);}
+.wallet-row:last-child{border-bottom:0;}
+.wallet-label{font-size:.72rem;color:var(--muted);font-weight:600;}
+.wallet-address{font-size:.78rem;word-break:break-all;color:var(--white);background:rgba(0,0,0,.25);padding:10px 12px;border-radius:8px;margin-top:4px;}
+.copy-btn{align-self:flex-start;margin-top:6px;border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--cyan);padding:6px 10px;border-radius:6px;font-size:.72rem;font-weight:600;}
+.support-box a{color:var(--cyan);font-weight:650;text-decoration:none;word-break:break-all;}
+.referral-link-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0;}
+.referral-link{flex:1;min-width:200px;font-size:.78rem;word-break:break-all;background:rgba(0,0,0,.25);padding:10px 12px;border-radius:8px;}
+.referral-stats{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;}
+.referral-stat{padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:rgba(0,0,0,.15);min-width:120px;}
+.referral-stat strong{display:block;color:var(--cyan);font-size:1.2rem;margin-bottom:4px;}
+.referral-stat span{font-size:.72rem;color:var(--muted);}
+.progress-section{margin-bottom:28px;}
+.progress-card{padding:18px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.03);margin-bottom:12px;}
+.progress-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.progress-title{font-weight:700;}
+.progress-meta{color:var(--muted);font-size:.78rem;}
+.badge-pending{color:var(--amber);}
+.badge-active{color:var(--green);}
+.progress-bar-wrap{height:8px;background:rgba(255,255,255,.06);border-radius:999px;overflow:hidden;margin:10px 0;}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--cyan),#20edf9);border-radius:999px;transition:width .4s ease;}
+.progress-bar.idle{width:0!important;background:rgba(255,255,255,.12);}
+.progress-stats{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.75rem;color:var(--muted);}
+.progress-stats strong{color:var(--white);}
+.empty-progress{padding:18px;border:1px dashed var(--border);border-radius:14px;color:var(--muted);font-size:.82rem;text-align:center;}
+.confirm-tx-btn{margin-top:10px;padding:8px 12px;border-radius:8px;border:1px solid rgba(0,229,245,.35);color:var(--cyan);font-size:.75rem;font-weight:650;}
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.78);backdrop-filter:blur(7px);z-index:5000;}
+.modal.open{display:flex;}
+.auth-box,.plan-box,.confirm-box{width:100%;max-width:430px;max-height:92vh;overflow-y:auto;position:relative;padding:28px 22px;border:1px solid rgba(0,229,245,.18);border-radius:18px;background:linear-gradient(155deg,#101c34,#080f20);}
+.plan-box{max-width:480px;}
+.confirm-box{text-align:center;max-width:400px;}
+.confirm-icon{font-size:2.4rem;margin-bottom:12px;}
+.close{position:absolute;top:10px;right:12px;width:38px;height:38px;font-size:1.7rem;color:var(--muted);}
+.close:hover{color:var(--white);}
+.auth-box h2,.plan-box h2,.confirm-box h2{font-size:1.3rem;margin-bottom:6px;}
+.auth-sub{color:var(--muted);font-size:.8rem;margin-bottom:18px;}
+.form-group{margin-bottom:13px;}
+.form-group label{display:block;margin-bottom:5px;color:#b5c0d1;font-size:.75rem;font-weight:600;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.045);color:var(--white);outline:none;}
+.form-group textarea{min-height:70px;resize:vertical;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:rgba(0,229,245,.6);}
+.submit{width:100%;height:46px;margin-top:6px;}
+.switch{margin-top:16px;text-align:center;color:var(--muted);font-size:.76rem;}
+.link-btn{color:var(--cyan);text-decoration:underline;background:none;border:0;font-size:inherit;cursor:pointer;}
+.message{display:none;padding:10px 12px;margin-bottom:12px;border-radius:8px;font-size:.76rem;}
+.message.show{display:block;}
+.message.error{color:var(--red);background:rgba(251,113,133,.08);border:1px solid rgba(251,113,133,.18);}
+.message.success{color:var(--green);background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.18);}
+.selected-plan-summary{padding:12px 14px;border-radius:10px;background:rgba(0,229,245,.07);border:1px solid rgba(0,229,245,.2);margin-bottom:16px;font-size:.82rem;}
+.selected-plan-summary strong{color:var(--cyan);}
+@media(max-width:900px){
+  .pillars,.stats,.story,.mission-grid,.market-grid,.plans-grid,.about-grid,.strategy-grid,.payout-steps{grid-template-columns:1fr;}
+  .stats{grid-template-columns:1fr 1fr;}
+  .payout-steps{grid-template-columns:1fr 1fr;}
+  .navbar{padding:0 16px;}
+  .hero{padding:64px 18px 48px;}
+  .container{padding:0 18px;}
+  .cta-box{flex-direction:column;align-items:stretch;}
+  .cta-box .primary-btn{width:100%;}
+}
+</style>
+</head>
+<body>
+<canvas id="globeCanvas"></canvas>
+<div class="page-wrap">
+
+<nav class="navbar">
+  <a href="#" class="brand" id="brandLink">
+    <span class="brand-mark">▲</span>
+    <span class="brand-text"><span class="brand-name">AETHERIS</span><span class="brand-sub">CAPITAL</span></span>
+  </a>
+  <div class="nav-links" id="loggedOutNav">
+    <button class="nav-text-btn" id="loginButton" type="button">Client Access</button>
+  </div>
+  <div class="nav-links" id="loggedInNav" style="display:none;">
+    <button class="nav-text-btn" id="dashboardButton" type="button">Portfolio</button>
+    <button class="nav-text-btn" id="navLogoutButton" type="button">Log Out</button>
+  </div>
+</nav>
+
+<div class="news-ticker" id="newsTicker">
+  <div class="news-label"><i></i> Market News</div>
+  <div class="news-track"><div class="news-track-inner" id="newsTrack">
+    <a class="news-item" href="#"><span class="src">Loading</span> · Fetching headlines...</a>
+  </div></div>
+</div>
+
+<div id="landingPage" class="landing">
+  <section class="hero">
+    <div class="eyebrow">Hybrid CeDeFi Yield Platform</div>
+    <h1>Where Disciplined Capital<br><span>Meets Digital Markets.</span></h1>
+    <p class="hero-lead">
+      Aetheris Capital is a pure-crypto investment platform. Client capital is allocated through a Hybrid CeDeFi Yield Framework — funding-rate arbitrage, DeFi lending, liquid staking, and liquidity efficiency — with structured plan tiers, returns sent to your registered payout wallet, and <strong style="color:var(--white)">live investment progress tracking</strong> you can follow in your portfolio after deposit confirmation.
+    </p>
+    <div class="hero-actions">
+      <button class="primary-btn" id="heroSignupButton" type="button">Get Started</button>
+      <button class="ghost-btn" id="heroLoginButton" type="button">Client Access</button>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="container">
+      <div class="section-label">About Aetheris Capital</div>
+      <h2 class="section-title">What we are all about</h2>
+      <p class="section-text">
+        We give clients a clear path into pure-crypto yield strategies — and an equally clear path for how plan returns are directed back to them. The focus is process: nominated payout wallets, official funding addresses, confirmed deposits, live progress in the dashboard, and support when you need it.
+      </p>
+      <div class="about-grid">
+        <div class="about-card">
+          <h3>Our purpose</h3>
+          <p>Structured participation in crypto market yield, with visibility from allocation through to payout routing.</p>
+          <ul>
+            <li>Hybrid CeDeFi strategies — not stocks or forex as the core engine</li>
+            <li>Plan tiers with defined capital levels and horizons</li>
+            <li>Returns directed to the payout wallet you register</li>
+            <li>Live progress tracking once a deposit is confirmed</li>
+            <li>Support: aetheriscapital.support@gmail.com</li>
+          </ul>
+        </div>
+        <div class="about-card">
+          <h3>Client confidence</h3>
+          <p>Most clients want to know how money comes back — not only how it goes in.</p>
+          <ul>
+            <li>You choose the payout network and address</li>
+            <li>Company deposit wallets are published in your dashboard</li>
+            <li>Tracking starts only after your TX ID is submitted</li>
+            <li>Plan cycle progress is visible in your portfolio</li>
+            <li>Keep TX records; contact support for payment questions</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="payouts">
+    <div class="container">
+      <div class="section-label">Returns</div>
+      <h2 class="section-title">How your return reaches you</h2>
+      <p class="section-text">
+        Payout routing is built around the wallet you control. You register where returns should go; Aetheris processes plan outcomes to that address at the end of the plan horizon.
+      </p>
+      <div class="payout-steps">
+        <div class="payout-step"><div class="payout-num">1</div><h3>Register payout</h3><p>Submit your BTC, ETH, or USDT (TRC-20) address when you activate a plan.</p></div>
+        <div class="payout-step"><div class="payout-num">2</div><h3>Fund the plan</h3><p>Send the exact plan amount to the official company wallet shown for your network.</p></div>
+        <div class="payout-step"><div class="payout-num">3</div><h3>Confirm deposit</h3><p>Paste your transaction ID so the plan can move from pending to active.</p></div>
+        <div class="payout-step"><div class="payout-num">4</div><h3>Track live</h3><p>Watch investment progress in your portfolio for the full plan horizon.</p></div>
+        <div class="payout-step"><div class="payout-num">5</div><h3>Receive return</h3><p>At cycle end, the return is processed to your registered payout wallet.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="strategy">
+    <div class="container">
+      <div class="section-label">Yield Engine</div>
+      <h2 class="section-title">What powers the investment tiers</h2>
+      <p class="section-text">Capital is allocated through a <strong style="color:var(--white)">Hybrid CeDeFi Yield Framework</strong> — pure-crypto mechanisms across different market conditions.</p>
+      <div class="strategy-grid">
+        <div class="strategy-item"><div class="strategy-tag">Strategy A</div><h3>Funding rate arbitrage</h3><p>Delta-neutral style positioning aims to collect funding paid by leveraged traders, reducing pure directional bets as the main driver.</p></div>
+        <div class="strategy-item"><div class="strategy-tag">Strategy B</div><h3>DeFi lending &amp; vaults</h3><p>Stablecoin capital in established lending-style markets where borrowers pay interest that can be compounded programmatically.</p></div>
+        <div class="strategy-item"><div class="strategy-tag">Strategy C</div><h3>Liquid staking &amp; restaking</h3><p>Participation in proof-of-stake network economics via liquid staking pathways and optional restaking layers where used.</p></div>
+        <div class="strategy-item"><div class="strategy-tag">Strategy D</div><h3>Liquidity &amp; efficiency</h3><p>Automated liquidity and cross-venue efficiency seek fees and short-lived spreads — typically more active at higher tiers.</p></div>
+      </div>
+      <div class="tier-map">
+        <table>
+          <thead><tr><th>Tier</th><th>Primary strategy mix</th><th>Positioning</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Starter</strong></td><td>DeFi lending + liquid staking</td><td>More conservative crypto yield sleeve</td></tr>
+            <tr><td><strong>Growth</strong></td><td>Funding-rate arbitrage + lending</td><td>Balanced market-structure yield</td></tr>
+            <tr><td><strong>Pro</strong></td><td>Funding arb + liquidity efficiency</td><td>Higher activity allocation</td></tr>
+            <tr><td><strong>Elite</strong></td><td>Full multi-sleeve hybrid engine</td><td>Maximum published allocation intensity</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-label">Distinction</div>
+      <h2 class="section-title">Built for clarity end to end</h2>
+      <div class="pillars">
+        <div class="pillar"><div class="pillar-icon">◈</div><h3>Payout-first design</h3><p>You nominate where returns should go before capital is deployed against a plan tier.</p></div>
+        <div class="pillar"><div class="pillar-icon">⌁</div><h3>Live progress tracking</h3><p>After deposit confirmation, you can see how your investment is progressing through the plan horizon in your dashboard.</p></div>
+        <div class="pillar"><div class="pillar-icon">◎</div><h3>Structured tiers</h3><p>Each plan maps to a strategy mix — lending, funding arb, staking, or the full hybrid engine.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:10px;">
+    <div class="container">
+      <div class="stats">
+        <div class="stat"><strong>Payout Wallet</strong><span>Client-Nominated</span></div>
+        <div class="stat"><strong>Live Tracking</strong><span>After TX Confirm</span></div>
+        <div class="stat"><strong>CeDeFi</strong><span>Yield Framework</span></div>
+        <div class="stat"><strong>Support</strong><span>Direct Email</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container story">
+      <div>
+        <div class="section-label">Client pathway</div>
+        <h2 class="section-title">From plan to payout visibility</h2>
+        <p class="section-text">A straight sequence so you always know the next step — and can see progress once the plan is active.</p>
+        <ul>
+          <li>Open an account and access your portfolio</li>
+          <li>Choose a tier and register your payout wallet</li>
+          <li>Fund the official company address and confirm with TX ID</li>
+          <li>Follow live investment progress until the cycle completes</li>
+        </ul>
+      </div>
+      <div class="story-card">
+        <p class="quote">“It’s not supposed to be easy. Anyone who finds it easy is stupid.”</p>
+        <cite>— Charlie Munger</cite>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-label">Purpose</div>
+      <h2 class="section-title">Mission &amp; vision</h2>
+      <div class="mission-grid">
+        <div class="mission-card"><h3>Mission</h3><p>To provide structured access to pure-crypto yield mechanisms with transparent funding, nominated payout routing, and live progress tracking in the client portfolio.</p></div>
+        <div class="mission-card"><h3>Vision</h3><p>To be a disciplined digital-asset platform where clients understand both how capital is put to work and how plan returns are directed back to them.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+        <div><div class="section-label">Markets</div><h2 class="section-title" style="margin-bottom:0;">Live market context</h2></div>
+        <div class="live"><span class="live-dot"></span> Live data</div>
+      </div>
+      <div class="market-grid" id="landingMarketGrid"></div>
+      <div class="see-more-wrap"><button type="button" class="see-more-btn" id="landingSeeMore">See more markets</button></div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:10px;">
+    <div class="container">
+      <div class="cta-band">
+        <h2>Ready to track your investment with clarity?</h2>
+        <p>Open a client account to register a payout wallet, fund a plan, confirm your deposit, and follow live progress in your portfolio.</p>
+        <button class="primary-btn" id="ctaSignupButton" type="button">Get Started</button>
+        <p class="support-line">Support: <a href="mailto:aetheriscapital.support@gmail.com">aetheriscapital.support@gmail.com</a></p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<section id="dashboardPage" class="dashboard">
+  <div class="dashboard-header">
+    <div>
+      <h1 id="welcomeName">Welcome to your Portfolio</h1>
+      <p>Payout routing · live progress · plan management</p>
+    </div>
+    <button id="dashboardLogout" class="logout-btn" type="button">Log Out</button>
+  </div>
+  <div class="account-card">
+    <div class="account-label">Investment Account</div>
+    <div id="accountEmail" class="account-email">Loading...</div>
+    <div class="account-status">Portfolio Active</div>
+  </div>
+  <div class="progress-section">
+    <div class="section-label" style="margin-bottom:10px;">Your investments</div>
+    <h2 class="section-title" style="font-size:1.15rem;margin-bottom:14px;">Live investment progress tracking</h2>
+    <div id="progressList"></div>
+  </div>
+  <div class="cta-box">
+    <div>
+      <h2>Start a structured plan</h2>
+      <p>Register your payout wallet, fund the company address, confirm with your TX ID, then follow progress here until the cycle completes and the return is routed to you.</p>
+    </div>
+    <button class="primary-btn" id="startEarningBtn" type="button">Start Earning</button>
+  </div>
+  <div id="plansSection">
+    <div class="section-label" style="margin-bottom:10px;">Investment Plans</div>
+    <div class="plans-grid" id="plansGrid"></div>
+  </div>
+  <div class="referral-box">
+    <h3>Referral Program</h3>
+    <p>Share your personal link. New accounts opened through it count toward your referral totals. Use the promo posts with your link for Telegram and WhatsApp.</p>
+    <div class="referral-link-row">
+      <div class="referral-link" id="referralLink">—</div>
+      <button type="button" class="copy-btn" id="copyReferralBtn">Copy Link</button>
+    </div>
+    <div class="referral-stats">
+      <div class="referral-stat"><strong id="refCount">0</strong><span>Referrals</span></div>
+      <div class="referral-stat"><strong id="refCode">—</strong><span>Your Code</span></div>
+    </div>
+  </div>
+  <div class="wallets-box">
+    <h3>Company Deposit Wallets</h3>
+    <p>Send plan funds only to these official addresses.</p>
+    <div class="wallet-row">
+      <span class="wallet-label">Bitcoin (BTC)</span>
+      <div class="wallet-address" id="walletBtc">bc1qme2c8ld7k8zkqgec4e2s0uw40st5m3tryw6shq</div>
+      <button type="button" class="copy-btn" data-copy="walletBtc">Copy BTC Address</button>
+    </div>
+    <div class="wallet-row">
+      <span class="wallet-label">Ethereum (ETH)</span>
+      <div class="wallet-address" id="walletEth">0xA134C2FaB2D5c7A2373eF44E855fE9A30Ad8A020</div>
+      <button type="button" class="copy-btn" data-copy="walletEth">Copy ETH Address</button>
+    </div>
+    <div class="wallet-row">
+      <span class="wallet-label">USDT (TRC-20)</span>
+      <div class="wallet-address" id="walletUsdt">TAndQyaE3kmPKGrjt5GVWQVU7F4eYBpvqj</div>
+      <button type="button" class="copy-btn" data-copy="walletUsdt">Copy USDT Address</button>
+    </div>
+  </div>
+  <div class="support-box">
+    <h3>Client Support</h3>
+    <p>Payout questions, deposit confirmation, or account help:</p>
+    <a href="mailto:aetheriscapital.support@gmail.com">aetheriscapital.support@gmail.com</a>
+  </div>
+  <div class="section-label" style="margin-bottom:10px;">Markets</div>
+  <div class="market-grid" id="dashMarketGrid"></div>
+  <div class="see-more-wrap"><button type="button" class="see-more-btn" id="dashSeeMore">See more markets</button></div>
+</section>
+
+<div id="authModal" class="modal">
+  <div class="auth-box">
+    <button id="closeModal" class="close" type="button">×</button>
+    <section id="signupView">
+      <h2>Open Account</h2>
+      <p class="auth-sub">Create your Aetheris client access.</p>
+      <div id="signupMessage" class="message"></div>
+      <form id="signupForm">
+        <div class="form-group"><label>Full Name</label><input id="signupName" type="text" required placeholder="Your full name"></div>
+        <div class="form-group"><label>Email</label><input id="signupEmail" type="email" required placeholder="you@example.com"></div>
+        <div class="form-group"><label>Password</label><input id="signupPassword" type="password" minlength="8" required placeholder="At least 8 characters"></div>
+        <div class="form-group"><label>Confirm Password</label><input id="confirmPassword" type="password" minlength="8" required placeholder="Repeat password"></div>
+        <input type="hidden" id="signupRefCode" value="">
+        <button id="signupSubmit" class="primary-btn submit" type="submit">Create Account</button>
+      </form>
+      <p class="switch">Already registered? <button id="switchToLogin" class="link-btn" type="button">Log In</button></p>
+    </section>
+    <section id="loginView" style="display:none;">
+      <h2>Client Access</h2>
+      <p class="auth-sub">Log in to your portfolio.</p>
+      <div id="loginMessage" class="message"></div>
+      <form id="loginForm">
+        <div class="form-group"><label>Email</label><input id="loginEmail" type="email" required placeholder="you@example.com"></div>
+        <div class="form-group"><label>Password</label><input id="loginPassword" type="password" required placeholder="Your password"></div>
+        <button id="loginSubmit" class="primary-btn submit" type="submit">Access Portfolio</button>
+      </form>
+      <p class="switch">New client? <button id="switchToSignup" class="link-btn" type="button">Open Account</button></p>
+    </section>
+  </div>
+</div>
+
+<div id="planModal" class="modal">
+  <div class="plan-box">
+    <button id="closePlanModal" class="close" type="button">×</button>
+    <h2>Activate Investment Plan</h2>
+    <p class="auth-sub">Register where returns should go, fund the plan, then confirm your deposit to start live tracking.</p>
+    <div id="planMessage" class="message"></div>
+    <div class="selected-plan-summary" id="selectedPlanSummary">—</div>
+    <form id="planForm">
+      <div class="form-group">
+        <label>Payout Network (where your return is sent)</label>
+        <select id="payoutNetwork" required>
+          <option value="">Select network</option>
+          <option value="BTC">Bitcoin (BTC)</option>
+          <option value="ETH">Ethereum (ETH)</option>
+          <option value="USDT-TRC20">USDT (TRC-20)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Your Payout Wallet Address</label>
+        <input id="payoutAddress" type="text" required placeholder="Wallet address for your plan return">
+      </div>
+      <div class="form-group">
+        <label>Optional Note</label>
+        <textarea id="planNote" placeholder="Optional message"></textarea>
+      </div>
+      <button class="primary-btn submit" type="submit">Continue to Deposit Address</button>
+    </form>
+    <div id="depositInstructions" style="display:none;margin-top:18px;">
+      <h3 style="font-size:.95rem;margin-bottom:10px;">1. Send payment to this company wallet</h3>
+      <div class="wallet-address" id="activeDepositAddress">—</div>
+      <button type="button" class="copy-btn" id="copyDepositBtn" style="margin-top:8px;">Copy Deposit Address</button>
+      <div class="form-group" style="margin-top:16px;">
+        <label>2. After sending, paste Transaction ID / TX Hash</label>
+        <input id="txHashInput" type="text" placeholder="Paste TX ID here">
+      </div>
+      <button type="button" class="primary-btn submit" id="confirmDepositBtn">Confirm Deposit &amp; Start Tracking</button>
+      <p style="color:var(--muted);font-size:.75rem;margin-top:12px;line-height:1.5;">
+        Live progress tracking starts after TX confirmation. At cycle end, the return is processed to your registered payout wallet.
+        Support: <a href="mailto:aetheriscapital.support@gmail.com" style="color:var(--cyan);">aetheriscapital.support@gmail.com</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div id="confirmModal" class="modal">
+  <div class="confirm-box">
+    <div class="confirm-icon">✓</div>
+    <h2>Deposit confirmed</h2>
+    <p class="auth-sub" id="confirmModalText">Your transaction has been recorded. Live investment progress tracking is now active for this plan.</p>
+    <button type="button" class="primary-btn submit" id="confirmModalOk">View Progress</button>
+  </div>
+</div>
+
+<div id="txModal" class="modal">
+  <div class="plan-box">
+    <button id="closeTxModal" class="close" type="button">×</button>
+    <h2>Confirm Deposit</h2>
+    <p class="auth-sub">Paste the transaction ID so live progress tracking can begin.</p>
+    <div id="txMessage" class="message"></div>
+    <div class="form-group">
+      <label>Transaction ID / TX Hash</label>
+      <input id="dashTxHash" type="text" placeholder="Paste TX ID">
+    </div>
+    <button type="button" class="primary-btn submit" id="dashConfirmTxBtn">Confirm &amp; Start Tracking</button>
+  </div>
+</div>
+
+<footer>
+  <p class="disclaimer">
+    Digital assets involve risk and may lose value. Information on this site is general in nature and is not investment, legal, or tax advice.
+    Plan return figures are targets that can vary with funding rates, liquidity, and market conditions. Past or illustrated performance does not ensure future results.
+  </p>
+  <p class="footer-support">Support: <a href="mailto:aetheriscapital.support@gmail.com">aetheriscapital.support@gmail.com</a></p>
+  <p>© 2026 Aetheris Capital. All rights reserved.</p>
+</footer>
+</div>
+
+<script>
+(function initGlobe() {
+  const canvas = document.getElementById('globeCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w, h, cx, cy, radius, rot = 0;
+  function resize() {
+    w = canvas.width = window.innerWidth * (window.devicePixelRatio || 1);
+    h = canvas.height = window.innerHeight * (window.devicePixelRatio || 1);
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    cx = w / 2; cy = h * 0.42; radius = Math.min(w, h) * 0.32;
+  }
+  function project(lat, lon, R) {
+    const x = R * Math.cos(lat) * Math.sin(lon + rot);
+    const y = R * Math.sin(lat);
+    const z = R * Math.cos(lat) * Math.cos(lon + rot);
+    return { x: cx + x, y: cy + y, z };
+  }
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    ctx.strokeStyle = 'rgba(0, 229, 245, 0.55)';
+    ctx.lineWidth = 1.1 * (window.devicePixelRatio || 1);
+    for (let i = 0; i <= 12; i++) {
+      const lat = -Math.PI / 2 + (i / 12) * Math.PI;
+      ctx.beginPath(); let s = false;
+      for (let j = 0; j <= 64; j++) {
+        const p = project(lat, (j / 64) * Math.PI * 2, radius);
+        if (p.z < -radius * 0.05) { s = false; continue; }
+        if (!s) { ctx.moveTo(p.x, p.y); s = true; } else ctx.lineTo(p.x, p.y);
+      }
+      ctx.stroke();
+    }
+    for (let i = 0; i < 18; i++) {
+      const lon = (i / 18) * Math.PI * 2;
+      ctx.beginPath(); let s = false;
+      for (let j = 0; j <= 64; j++) {
+        const p = project(-Math.PI / 2 + (j / 64) * Math.PI, lon, radius);
+        if (p.z < -radius * 0.05) { s = false; continue; }
+        if (!s) { ctx.moveTo(p.x, p.y); s = true; } else ctx.lineTo(p.x, p.y);
+      }
+      ctx.stroke();
+    }
+    rot += 0.0022;
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize', resize);
+  resize(); draw();
+})();
+
+document.addEventListener('DOMContentLoaded', () => {
+  const SUPABASE_URL = 'https://kbzxizcismxewequcrkt.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtienhpemNpc214ZXdlcXVjcmt0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5OTA5MzAsImV4cCI6MjEwMjU2NjkzMH0.157W4soYmLXZgE_EFJWMhbkonibzJ0k_6_pPVLN8j8g';
+  const COMPANY_WALLETS = {
+    BTC: 'bc1qme2c8ld7k8zkqgec4e2s0uw40st5m3tryw6shq',
+    ETH: '0xA134C2FaB2D5c7A2373eF44E855fE9A30Ad8A020',
+    'USDT-TRC20': 'TAndQyaE3kmPKGrjt5GVWQVU7F4eYBpvqj'
+  };
+  const PLANS = [
+    { id:'starter', name:'Starter', amount:50, returnPct:18, days:7, badge:'Entry Level', featured:false,
+      strategy: 'Lending + liquid staking sleeve',
+      details:['Conservative CeDeFi mix','7-day plan horizon','Return routed to your payout wallet'] },
+    { id:'growth', name:'Growth', amount:250, returnPct:28, days:14, badge:'Popular', featured:true,
+      strategy: 'Funding-rate arbitrage + lending',
+      details:['Balanced market-structure yield','14-day plan horizon','Live progress after TX confirm'] },
+    { id:'pro', name:'Pro', amount:1000, returnPct:40, days:21, badge:'Higher Budget', featured:false,
+      strategy: 'Funding arb + liquidity efficiency',
+      details:['Higher activity allocation','21-day plan horizon','Return routed to your payout wallet'] },
+    { id:'elite', name:'Elite', amount:5000, returnPct:55, days:30, badge:'Premium', featured:false,
+      strategy: 'Full multi-sleeve hybrid engine',
+      details:['Maximum published intensity','30-day plan horizon','Live progress after TX confirm'] }
+  ];
+  const MARKET_ASSETS = [
+    { id:'bitcoin', symbol:'₿', name:'Bitcoin', pair:'BTC / USD', primary:true },
+    { id:'ethereum', symbol:'Ξ', name:'Ethereum', pair:'ETH / USD', primary:true },
+    { id:'solana', symbol:'S', name:'Solana', pair:'SOL / USD', primary:true },
+    { id:'binancecoin', symbol:'B', name:'BNB', pair:'BNB / USD', primary:false },
+    { id:'ripple', symbol:'X', name:'XRP', pair:'XRP / USD', primary:false },
+    { id:'cardano', symbol:'A', name:'Cardano', pair:'ADA / USD', primary:false },
+    { id:'dogecoin', symbol:'D', name:'Dogecoin', pair:'DOGE / USD', primary:false },
+    { id:'avalanche-2', symbol:'V', name:'Avalanche', pair:'AVAX / USD', primary:false },
+    { id:'polkadot', symbol:'P', name:'Polkadot', pair:'DOT / USD', primary:false },
+    { id:'chainlink', symbol:'L', name:'Chainlink', pair:'LINK / USD', primary:false },
+    { id:'litecoin', symbol:'Ł', name:'Litecoin', pair:'LTC / USD', primary:false },
+    { id:'tron', symbol:'T', name:'TRON', pair:'TRX / USD', primary:false }
+  ];
+
+  const modal = document.getElementById('authModal');
+  const planModal = document.getElementById('planModal');
+  const confirmModal = document.getElementById('confirmModal');
+  const txModal = document.getElementById('txModal');
+  const landingPage = document.getElementById('landingPage');
+  const dashboardPage = document.getElementById('dashboardPage');
+  const loggedOutNav = document.getElementById('loggedOutNav');
+  const loggedInNav = document.getElementById('loggedInNav');
+  const newsTicker = document.getElementById('newsTicker');
+  const plansGrid = document.getElementById('plansGrid');
+  const progressList = document.getElementById('progressList');
+  let supabaseClient = null, currentUserEmail = null, selectedPlan = null, pendingPlanRecord = null, txTargetId = null;
+  let landingExpanded = false, dashExpanded = false;
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const incomingRef = (urlParams.get('ref') || '').trim().toUpperCase();
+  if (incomingRef) {
+    localStorage.setItem('aetheris_pending_ref', incomingRef);
+    document.getElementById('signupRefCode').value = incomingRef;
+  } else {
+    document.getElementById('signupRefCode').value = localStorage.getItem('aetheris_pending_ref') || '';
+  }
+
+  function storageKey() { return 'aetheris_plans_' + (currentUserEmail || 'guest'); }
+  function getPlans() { try { return JSON.parse(localStorage.getItem(storageKey()) || '[]'); } catch { return []; } }
+  function savePlans(list) { localStorage.setItem(storageKey(), JSON.stringify(list)); }
+  function refCodeFromEmail(email) {
+    if (!email) return 'GUEST';
+    let h = 0;
+    for (let i = 0; i < email.length; i++) h = ((h << 5) - h) + email.charCodeAt(i);
+    return 'AC' + Math.abs(h).toString(36).toUpperCase().slice(0, 8);
+  }
+  function getReferrals() { try { return JSON.parse(localStorage.getItem('aetheris_referrals') || '{}'); } catch { return {}; } }
+  function saveReferrals(obj) { localStorage.setItem('aetheris_referrals', JSON.stringify(obj)); }
+
+  function buildMarketGrid(containerId, prefix) {
+    const grid = document.getElementById(containerId);
+    if (!grid) return;
+    grid.innerHTML = MARKET_ASSETS.map(a => `
+      <div class="market-card ${a.primary ? '' : 'extra'}">
+        <div class="coin"><div class="coin-icon">${a.symbol}</div><div><div class="coin-name">${a.name}</div><div class="coin-symbol">${a.pair}</div></div></div>
+        <div id="${prefix}_${a.id}_price" class="market-price">Loading...</div>
+        <div id="${prefix}_${a.id}_change" class="market-change">--</div>
+      </div>`).join('');
+  }
+  buildMarketGrid('landingMarketGrid', 'landing');
+  buildMarketGrid('dashMarketGrid', 'dash');
+
+  function setupSeeMore(btnId, gridId, isLanding) {
+    const btn = document.getElementById(btnId), grid = document.getElementById(gridId);
+    if (!btn || !grid) return;
+    btn.onclick = () => {
+      if (isLanding) {
+        landingExpanded = !landingExpanded;
+        grid.classList.toggle('markets-expanded', landingExpanded);
+        btn.textContent = landingExpanded ? 'Show less' : 'See more markets';
+      } else {
+        dashExpanded = !dashExpanded;
+        grid.classList.toggle('markets-expanded', dashExpanded);
+        btn.textContent = dashExpanded ? 'Show less' : 'See more markets';
+      }
+    };
+  }
+  setupSeeMore('landingSeeMore', 'landingMarketGrid', true);
+  setupSeeMore('dashSeeMore', 'dashMarketGrid', false);
+
+  function renderPlans() {
+    plansGrid.innerHTML = PLANS.map(p => `
+      <div class="plan-card ${p.featured ? 'featured' : ''}">
+        <div class="plan-badge">${p.badge}</div>
+        <div class="plan-name">${p.name} Plan</div>
+        <div class="plan-amount">$${p.amount.toLocaleString()}</div>
+        <div class="plan-return">Target return +${p.returnPct}% · ${p.days} days</div>
+        <div class="plan-strategy">${p.strategy}</div>
+        <ul class="plan-details">${p.details.map(d => `<li>${d}</li>`).join('')}</ul>
+        <button class="primary-btn plan-btn" type="button" data-plan="${p.id}">Select Plan</button>
+      </div>`).join('');
+    plansGrid.querySelectorAll('[data-plan]').forEach(btn => {
+      btn.onclick = () => openPlanModal(btn.getAttribute('data-plan'));
+    });
+  }
+  renderPlans();
+
+  function renderProgress() {
+    const list = getPlans();
+    if (!list.length) {
+      progressList.innerHTML = `<div class="empty-progress">No investments yet. Choose a plan, register your payout wallet, fund the company address, then confirm with your TX ID to start live tracking.</div>`;
+      return;
+    }
+    const now = Date.now();
+    progressList.innerHTML = list.slice().reverse().map(item => {
+      const active = item.status === 'active' && item.activatedAt;
+      let pct = 0, statusLabel = 'Awaiting deposit', badgeClass = 'badge-pending';
+      if (active) {
+        const start = new Date(item.activatedAt).getTime();
+        const end = start + item.days * 86400000;
+        pct = Math.min(100, Math.max(0, ((now - start) / (end - start)) * 100));
+        statusLabel = pct >= 100 ? 'Cycle complete — return processing window' : 'Live progress';
+        badgeClass = 'badge-active';
+      }
+      const expected = item.amount * (1 + item.returnPct / 100);
+      return `
+        <div class="progress-card">
+          <div class="progress-top">
+            <div class="progress-title">${item.planName} Plan</div>
+            <div class="progress-meta ${badgeClass}">${statusLabel}</div>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar ${active ? '' : 'idle'}" style="width:${active ? pct.toFixed(1) : 0}%"></div>
+          </div>
+          <div class="progress-stats">
+            <span>Invested: <strong>$${item.amount}</strong></span>
+            <span>Target return: <strong>+${item.returnPct}%</strong></span>
+            <span>Illustrated outcome: <strong>$${expected.toFixed(2)}</strong></span>
+            <span>Progress: <strong>${active ? pct.toFixed(0) : 0}%</strong></span>
+          </div>
+          <div class="progress-meta" style="margin-top:8px;">
+            Payout (${item.network}): ${item.payoutAddress.slice(0,10)}...${item.payoutAddress.slice(-8)}
+            ${item.txHash ? ` · TX: ${item.txHash.slice(0,12)}...` : ''}
+          </div>
+          ${!active ? `<button type="button" class="confirm-tx-btn" data-txid="${item.id}">Confirm deposit (enter TX ID)</button>` : ''}
+        </div>`;
+    }).join('');
+    progressList.querySelectorAll('[data-txid]').forEach(btn => {
+      btn.onclick = () => {
+        txTargetId = btn.getAttribute('data-txid');
+        document.getElementById('dashTxHash').value = '';
+        document.getElementById('txMessage').className = 'message';
+        txModal.classList.add('open');
+      };
+    });
+  }
+
+  function renderReferralUI() {
+    const code = refCodeFromEmail(currentUserEmail);
+    const base = window.location.origin + window.location.pathname;
+    const link = base + (base.includes('?') ? '&' : '?') + 'ref=' + code;
+    document.getElementById('referralLink').textContent = link;
+    document.getElementById('refCode').textContent = code;
+    const refs = getReferrals();
+    document.getElementById('refCount').textContent = String((refs[code] || []).length);
+  }
+
+  function openAuth(view) {
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('loginView').style.display = view === 'login' ? 'block' : 'none';
+    document.getElementById('signupView').style.display = view === 'login' ? 'none' : 'block';
+  }
+  function closeAuth() { modal.classList.remove('open'); document.body.style.overflow = ''; }
+  function showMsg(el, type, text) { el.textContent = text; el.className = 'message show ' + type; }
+
+  document.getElementById('loginButton').onclick = () => openAuth('login');
+  document.getElementById('heroLoginButton').onclick = () => openAuth('login');
+  document.getElementById('heroSignupButton').onclick = () => openAuth('signup');
+  document.getElementById('ctaSignupButton').onclick = () => openAuth('signup');
+  document.getElementById('closeModal').onclick = closeAuth;
+  document.getElementById('switchToLogin').onclick = () => openAuth('login');
+  document.getElementById('switchToSignup').onclick = () => openAuth('signup');
+  modal.onclick = e => { if (e.target === modal) closeAuth(); };
+
+  function openPlanModal(planId) {
+    selectedPlan = PLANS.find(p => p.id === planId);
+    if (!selectedPlan) return;
+    pendingPlanRecord = null;
+    document.getElementById('selectedPlanSummary').innerHTML =
+      `<strong>${selectedPlan.name} Plan</strong> — $${selectedPlan.amount} · Target return +${selectedPlan.returnPct}% / ${selectedPlan.days}d<br><span style="color:var(--muted);font-size:.78rem;">${selectedPlan.strategy}</span>`;
+    document.getElementById('planMessage').className = 'message';
+    document.getElementById('depositInstructions').style.display = 'none';
+    document.getElementById('planForm').reset();
+    document.getElementById('txHashInput').value = '';
+    planModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closePlanModal() { planModal.classList.remove('open'); document.body.style.overflow = ''; }
+  document.getElementById('closePlanModal').onclick = closePlanModal;
+  planModal.onclick = e => { if (e.target === planModal) closePlanModal(); };
+  document.getElementById('startEarningBtn').onclick = () => document.getElementById('plansSection').scrollIntoView({ behavior: 'smooth' });
+
+  document.getElementById('planForm').onsubmit = (e) => {
+    e.preventDefault();
+    if (!selectedPlan) return;
+    const network = document.getElementById('payoutNetwork').value;
+    const address = document.getElementById('payoutAddress').value.trim();
+    if (!network || !address) return showMsg(document.getElementById('planMessage'), 'error', 'Select network and enter your payout address.');
+    document.getElementById('activeDepositAddress').textContent = COMPANY_WALLETS[network];
+    document.getElementById('depositInstructions').style.display = 'block';
+    showMsg(document.getElementById('planMessage'), 'success', `Payout wallet saved. Send exactly $${selectedPlan.amount}, then paste your TX ID to start live tracking.`);
+    const id = 'inv_' + Date.now();
+    pendingPlanRecord = {
+      id, planId: selectedPlan.id, planName: selectedPlan.name, amount: selectedPlan.amount,
+      returnPct: selectedPlan.returnPct, days: selectedPlan.days, network, payoutAddress: address,
+      note: document.getElementById('planNote').value.trim(),
+      status: 'pending', createdAt: new Date().toISOString(), activatedAt: null, txHash: null
+    };
+    const list = getPlans();
+    list.push(pendingPlanRecord);
+    savePlans(list);
+    renderProgress();
+  };
+
+  function activateDeposit(txHash, planId) {
+    const list = getPlans();
+    const idx = list.findIndex(p => p.id === planId);
+    if (idx < 0) return false;
+    list[idx].status = 'active';
+    list[idx].txHash = txHash;
+    list[idx].activatedAt = new Date().toISOString();
+    savePlans(list);
+    renderProgress();
+    return true;
+  }
+
+  document.getElementById('confirmDepositBtn').onclick = () => {
+    const tx = document.getElementById('txHashInput').value.trim();
+    if (!tx || tx.length < 20) return showMsg(document.getElementById('planMessage'), 'error', 'Enter a valid transaction ID.');
+    if (!pendingPlanRecord) return showMsg(document.getElementById('planMessage'), 'error', 'Complete plan details first.');
+    activateDeposit(tx, pendingPlanRecord.id);
+    closePlanModal();
+    document.getElementById('confirmModalText').textContent =
+      'Deposit confirmed. You can now follow live investment progress for your ' + pendingPlanRecord.planName + ' plan in the portfolio.';
+    confirmModal.classList.add('open');
+  };
+  document.getElementById('confirmModalOk').onclick = () => { confirmModal.classList.remove('open'); document.body.style.overflow = ''; };
+  confirmModal.onclick = e => { if (e.target === confirmModal) { confirmModal.classList.remove('open'); document.body.style.overflow = ''; } };
+  document.getElementById('closeTxModal').onclick = () => { txModal.classList.remove('open'); };
+  document.getElementById('dashConfirmTxBtn').onclick = () => {
+    const tx = document.getElementById('dashTxHash').value.trim();
+    if (!tx || tx.length < 20) return showMsg(document.getElementById('txMessage'), 'error', 'Enter a valid transaction ID.');
+    if (!txTargetId) return;
+    activateDeposit(tx, txTargetId);
+    txModal.classList.remove('open');
+    document.getElementById('confirmModalText').textContent = 'Deposit confirmed. Live investment progress tracking has started.';
+    confirmModal.classList.add('open');
+  };
+
+  document.getElementById('copyDepositBtn').onclick = () => {
+    navigator.clipboard.writeText(document.getElementById('activeDepositAddress').textContent).then(() => alert('Deposit address copied'));
+  };
+  document.querySelectorAll('.copy-btn[data-copy]').forEach(btn => {
+    btn.onclick = () => navigator.clipboard.writeText(document.getElementById(btn.getAttribute('data-copy')).textContent).then(() => alert('Address copied'));
+  });
+  document.getElementById('copyReferralBtn').onclick = () => {
+    navigator.clipboard.writeText(document.getElementById('referralLink').textContent).then(() => alert('Referral link copied'));
+  };
+
+  async function fetchMarkets() {
+    const ids = MARKET_ASSETS.map(a => a.id).join(',');
+    try {
+      const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`);
+      const data = await res.json();
+      ['landing', 'dash'].forEach(prefix => {
+        MARKET_ASSETS.forEach(a => {
+          const pe = document.getElementById(`${prefix}_${a.id}_price`);
+          const ce = document.getElementById(`${prefix}_${a.id}_change`);
+          if (!pe || !data[a.id]) return;
+          const price = data[a.id].usd, ch = data[a.id].usd_24h_change ?? 0;
+          pe.textContent = '$' + price.toLocaleString('en-US', { minimumFractionDigits: price < 1 ? 4 : 2, maximumFractionDigits: price < 1 ? 4 : 2 });
+          ce.textContent = (ch >= 0 ? '+' : '') + ch.toFixed(2) + '%';
+          ce.className = 'market-change ' + (ch >= 0 ? 'up' : 'down');
+        });
+      });
+    } catch (e) {}
+  }
+  fetchMarkets(); setInterval(fetchMarkets, 60000);
+
+  async function loadNews() {
+    const track = document.getElementById('newsTrack');
+    if (!track) return;
+    let articles = [];
+    try {
+      const res = await fetch('https://cryptocurrency.cv/api/news?limit=12');
+      if (res.ok) {
+        const data = await res.json();
+        const list = data.articles || data.data || data || [];
+        articles = list.slice(0, 12).map(a => ({
+          title: a.title || '', url: a.link || a.url || '#',
+          source: (a.source && a.source.name) || a.source || 'Crypto'
+        })).filter(a => a.title);
+      }
+    } catch (e) {}
+    if (!articles.length) {
+      try {
+        const res = await fetch('https://min-api.cryptocompare.com/data/v2/news/?lang=EN');
+        if (res.ok) {
+          const data = await res.json();
+          articles = (data.Data || []).slice(0, 12).map(a => ({
+            title: a.title, url: a.url || '#', source: a.source_info?.name || a.source || 'News'
+          }));
+        }
+      } catch (e) {}
+    }
+    if (!articles.length) {
+      track.innerHTML = '<a class="news-item" href="#"><span class="src">News</span> · Headlines unavailable</a>';
+      return;
+    }
+    const html = articles.map(a => `<a class="news-item" href="${a.url}" target="_blank" rel="noopener"><span class="src">${a.source}</span> · ${a.title}</a>`).join('');
+    track.innerHTML = html + html;
+  }
+  loadNews(); setInterval(loadNews, 300000);
+
+  try {
+    if (window.supabase?.createClient) supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  } catch (e) { console.error(e); }
+
+  function updateUI(user) {
+    if (user) {
+      currentUserEmail = user.email || 'user';
+      landingPage.style.display = 'none';
+      dashboardPage.classList.add('show');
+      loggedOutNav.style.display = 'none';
+      loggedInNav.style.display = 'flex';
+      newsTicker.classList.add('hidden');
+      document.getElementById('accountEmail').textContent = user.email || '—';
+      document.getElementById('welcomeName').textContent = 'Welcome to your Portfolio, ' + (user.user_metadata?.full_name || 'Investor');
+      renderProgress();
+      renderReferralUI();
+      closeAuth();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      currentUserEmail = null;
+      landingPage.style.display = 'block';
+      dashboardPage.classList.remove('show');
+      loggedOutNav.style.display = 'flex';
+      loggedInNav.style.display = 'none';
+      newsTicker.classList.remove('hidden');
+    }
+  }
+
+  if (supabaseClient) {
+    supabaseClient.auth.getSession().then(({ data }) => updateUI(data.session?.user ?? null));
+    supabaseClient.auth.onAuthStateChange((_e, session) => updateUI(session?.user ?? null));
+  }
+
+  document.getElementById('brandLink').onclick = e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+  document.getElementById('dashboardButton').onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  document.getElementById('signupForm').onsubmit = async (e) => {
+    e.preventDefault();
+    if (!supabaseClient) return showMsg(document.getElementById('signupMessage'), 'error', 'Auth not ready');
+    const name = document.getElementById('signupName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const password = document.getElementById('signupPassword').value;
+    const confirm = document.getElementById('confirmPassword').value;
+    const ref = (document.getElementById('signupRefCode').value || localStorage.getItem('aetheris_pending_ref') || '').toUpperCase();
+    if (password !== confirm) return showMsg(document.getElementById('signupMessage'), 'error', 'Passwords do not match');
+    document.getElementById('signupSubmit').disabled = true;
+    try {
+      const { data, error } = await supabaseClient.auth.signUp({
+        email, password, options: { data: { full_name: name, referred_by: ref || null } }
+      });
+      if (error) showMsg(document.getElementById('signupMessage'), 'error', error.message);
+      else {
+        if (ref) {
+          const refs = getReferrals();
+          if (!refs[ref]) refs[ref] = [];
+          if (!refs[ref].includes(email)) refs[ref].push(email);
+          saveReferrals(refs);
+          localStorage.removeItem('aetheris_pending_ref');
+        }
+        if (!data.session) {
+          showMsg(document.getElementById('signupMessage'), 'success', 'Account created. Check email to confirm, then log in.');
+          setTimeout(() => openAuth('login'), 2000);
+        }
+      }
+    } catch (err) { showMsg(document.getElementById('signupMessage'), 'error', 'Request failed'); }
+    document.getElementById('signupSubmit').disabled = false;
+  };
+
+  document.getElementById('loginForm').onsubmit = async (e) => {
+    e.preventDefault();
+    if (!supabaseClient) return showMsg(document.getElementById('loginMessage'), 'error', 'Auth not ready');
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    document.getElementById('loginSubmit').disabled = true;
+    try {
+      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      if (error) showMsg(document.getElementById('loginMessage'), 'error', error.message);
+    } catch (err) { showMsg(document.getElementById('loginMessage'), 'error', 'Request failed'); }
+    document.getElementById('loginSubmit').disabled = false;
+  };
+
+  async function logout() {
+    if (supabaseClient) await supabaseClient.auth.signOut();
+    else updateUI(null);
+  }
+  document.getElementById('navLogoutButton').onclick = logout;
+  document.getElementById('dashboardLogout').onclick = logout;
+  setInterval(() => { if (dashboardPage.classList.contains('show')) renderProgress(); }, 60000);
+});
+</script>
+</body>
+</html>
