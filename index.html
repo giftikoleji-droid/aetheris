@@ -1080,6 +1080,41 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('navLogoutButton').onclick = logout;
   document.getElementById('dashboardLogout').onclick = logout;
   setInterval(() => { if (dashboardPage.classList.contains('show')) renderProgress(); }, 60000);
+;document.addEventListener("DOMContentLoaded", () => {
+  const txForm = document.getElementById("txForm");
+  if (txForm) {
+    txForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const txInput = document.getElementById("txIdInput").value.trim();
+      const messageBox = document.getElementById("formMessage");
+
+      if (!txInput) {
+        alert("Please enter a valid Transaction ID.");
+        return;
+      }
+
+      const { data, error } = await supabaseClient
+        .from("transactions")
+        .select("*")
+        .eq("tx_hash", txInput)
+        .maybeSingle();
+
+      if (error || !data) {
+        alert("Invalid Transaction ID. Rejected by Supabase!");
+        if (messageBox) {
+          messageBox.textContent = "Transaction ID not found or unverified.";
+          messageBox.className = "message show error";
+        }
+        return;
+      }
+
+      alert("Transaction ID verified successfully!");
+      if (messageBox) {
+        messageBox.textContent = "Transaction verified successfully!";
+        messageBox.className = "message show success";
+      }
+    });
+  }
 });
 </script>
 </body>
