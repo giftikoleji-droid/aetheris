@@ -607,6 +607,22 @@ footer{text-align:center;padding:28px 20px;color:#64748b;font-size:.7rem;border-
 </div>
 
 <script>
+  async function loadReferralData(currentUserCode) {
+  if (!currentUserCode || !supabaseClient) return;
+
+  const { count, error } = await supabaseClient
+    .from('profiles')
+    .select('*', { count: 'exact', head: true })
+    .eq('referred_by', currentUserCode);
+
+  if (!error && count !== null) {
+    const refCountEl = document.getElementById('refCount');
+    if (refCountEl) {
+      refCountEl.textContent = count;
+    }
+  }
+  }
+  
 (function initGlobe() {
   const canvas = document.getElementById('globeCanvas');
   if (!canvas) return;
@@ -833,7 +849,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('referralLink').textContent = link;
     document.getElementById('refCode').textContent = code;
     const refs = getReferrals();
-    document.getElementById('refCount').textContent = String((refs[code] || []).length);
+    loadReferralData(code);
   }
 
   function openAuth(view) {
